@@ -2,15 +2,28 @@ window.onload = function() {
   const Entrada = document.querySelector("input")
   const Spoiler = document.querySelector("#spoiler")
 
+const Neurona = new brain.NeuralNetwork();
+Neurona.train([
+    {input: {r:0, g:0, b:0 }, output:{blanco:1} },
+    {input: {r:1, g:1, b:1 }, output:{negro:1 } }
+  ]);
+
+
   Entrada.addEventListener("change", (e) => {
     Spoiler.style.background = e.target.value;
     var ColorRGB = getRgb(e.target.value);
+    ColorRGB.r = ColorRGB.r/255;
+    ColorRGB.g = ColorRGB.g/255;
+    ColorRGB.b = ColorRGB.b/255;
     console.log("Color Selecionado: " + e.target.value);
     console.log("Rojo: " + ColorRGB.r);
     console.log("Azul: " + ColorRGB.b);
     console.log("Verde: " + ColorRGB.g);
 
-  })
+    var Resultado= brain.likely(ColorRGB, Neurona);
+    console.log(Resultado);
+    Spoiler.style.color = Resultado == "blanco" ? "white": "black";
+    });
 
   // https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
   function getRgb(hex) {
